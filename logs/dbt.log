@@ -1,0 +1,47 @@
+[0m11:32:15.583074 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1AAC9D010>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1AB6576E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1AB71D550>]}
+
+
+============================== 11:32:15.709681 | 9964c02f-52de-4d3f-b0a1-8b50a642cbf5 ==============================
+[0m11:32:15.709681 [info ] [MainThread]: Running with dbt=1.10.13
+[0m11:32:15.709681 [debug] [MainThread]: running dbt with arguments {'log_format': 'default', 'target_path': 'None', 'profiles_dir': 'C:\\Users\\emman\\.dbt', 'cache_selected_only': 'False', 'invocation_command': 'dbt init', 'warn_error': 'None', 'static_parser': 'True', 'partial_parse': 'True', 'indirect_selection': 'eager', 'send_anonymous_usage_stats': 'True', 'log_path': 'logs', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'fail_fast': 'False', 'use_experimental_parser': 'False', 'version_check': 'True', 'quiet': 'False', 'introspect': 'True', 'empty': 'None', 'log_cache_events': 'False', 'debug': 'False', 'no_print': 'None', 'use_colors': 'True', 'printer_width': '80', 'write_json': 'True'}
+[0m11:32:35.667389 [debug] [MainThread]: Starter project path: D:\source\efosu-fosu\Divvy Transport Analysis\.venv\Lib\site-packages\dbt\include\starter_project
+[0m11:32:35.708446 [info ] [MainThread]: 
+Your new dbt project "divvy_trips" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m11:32:35.710356 [info ] [MainThread]: Setting up your profile.
+[0m11:32:45.754985 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m11:32:45.754985 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m11:32:45.755985 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m11:50:12.606608 [info ] [MainThread]: Profile divvy_trips written to C:\Users\emman\.dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m11:50:12.612766 [debug] [MainThread]: Command `dbt init` succeeded at 11:50:12.611505 after 1080.29 seconds
+[0m11:50:12.613767 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1AB92E930>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1BECB3F80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001E1ABC3F080>]}
+[0m11:50:12.614451 [debug] [MainThread]: Flushing usage events
+[0m11:50:16.022528 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m12:00:50.997944 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA8EBBA40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA6282060>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA5D03170>]}
+
+
+============================== 12:00:51.001958 | 2ee668a0-aa89-4d0a-9895-ab2f33e47160 ==============================
+[0m12:00:51.001958 [info ] [MainThread]: Running with dbt=1.10.13
+[0m12:00:51.001958 [debug] [MainThread]: running dbt with arguments {'write_json': 'True', 'profiles_dir': 'C:\\Users\\emman\\.dbt', 'invocation_command': 'dbt deps', 'log_format': 'default', 'cache_selected_only': 'False', 'warn_error': 'None', 'static_parser': 'True', 'partial_parse': 'True', 'log_path': 'logs', 'send_anonymous_usage_stats': 'True', 'fail_fast': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'indirect_selection': 'eager', 'version_check': 'True', 'use_experimental_parser': 'False', 'introspect': 'True', 'quiet': 'False', 'empty': 'None', 'log_cache_events': 'False', 'debug': 'False', 'no_print': 'None', 'use_colors': 'True', 'printer_width': '80', 'target_path': 'None'}
+[0m12:00:51.001958 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path D:\source\efosu-fosu\Divvy Transport Analysis\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m12:00:51.001958 [debug] [MainThread]: Command `dbt deps` failed at 12:00:51.001958 after 0.16 seconds
+[0m12:00:51.001958 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA8A52720>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA909A090>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020EA909A990>]}
+[0m12:00:51.001958 [debug] [MainThread]: Flushing usage events
+[0m12:00:52.782427 [debug] [MainThread]: An error was encountered while trying to flush usage events
