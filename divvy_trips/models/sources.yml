@@ -1,0 +1,17 @@
+sources:
+    - name: divvy_trip_app
+      database: divvy_trip
+      schema: default
+      tables:
+        - name: 202401_divvy_tripdata
+        - name: 202402_divvy_tripdata
+        - name: 202403_divvy_tripdata
+        - name: 202404_divvy_tripdata
+        - name: 202405_divvy_tripdata
+        - name: 202406_divvy_tripdata
+        - name: 202407_divvy_tripdata
+        - name: 202408_divvy_tripdata
+        - name: 202409_divvy_tripdata
+        - name: 202410_divvy_tripdata
+        - name: 202411_divvy_tripdata
+        - name: 202412_divvy_tripdata
