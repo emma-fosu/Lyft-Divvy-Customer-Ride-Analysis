@@ -20,7 +20,6 @@ snapshot-paths: ["snapshots"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
-  - "dbt_packages"
 
 
 # Configuring models
@@ -32,5 +31,5 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   divvy_trips:
     # Config indicated by + and applies to all files under models/example/
-    example:
+    raw:
       +materialized: view
