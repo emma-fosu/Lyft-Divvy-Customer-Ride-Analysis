@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = 'table',
+    )
+}}
+
 {%- set months = range(1, 13) -%}
 {%- set table_names = [] -%}
 {%- for month in months -%}

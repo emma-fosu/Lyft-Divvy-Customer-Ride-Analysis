@@ -1,0 +1,96 @@
+models:
+    - name: cleaned_divvy_tripdata_2024
+      columns:
+        - name: ride_id
+          data_tests:
+            - unique
+            - not_null
+            - dbt_utils.expression_is_true:
+                arguments:
+                  expression: "NOT {{column_name}} RLIKE '^[[:space:]]+$'"
+            - dbt_utils.expression_is_true:
+                arguments:
+                  expression: "{{ column_name }} RLIKE '^[A-F0-9]{16}$'"
+        - name: started_at
+          data_tests:
+            - not_null
+            - dbt_utils.expression_is_true:
+                arguments:
+                  expression: "<= ended_at"
+        - name: ended_at
+          data_tests:
+            - not_null
+            - dbt_utils.expression_is_true:
+                arguments:
+                  expression: ">= started_at"
+        - name: rideable_type
+          config:
+              tags: [rideable_type]
+          data_tests:
+            - not_null
+            - accepted_values:
+                arguments:
+                    values: ["Electric Bike", "Classic Bike", "Scooter", "Electric Scooter", "Unknown Rideable"]
+        - name: member_casual
+          config:
+              tags: [member_casual]
+          data_tests:
+            - not_null
+            - accepted_values:
+                arguments:
+                    values: ["Member", "Casual"]
+        - name: start_station_name
+          config:
+              tags: [start_station_name]
+          data_tests:
+            - not_null
+            - dbt_utils.expression_is_true:
+                arguments:
+                  expression: "NOT {{column_name}} RLIKE '^[[:space:]]+$'"
+        - name: end_station_name
+          data_tests:
+            - not_null:
+                config:
+                  where: "end_station_id IS NOT NULL"
+        - name: start_lat
+          config:
+              tags: ["start_lat"]
+          data_tests:
+            - dbt_utils.expression_is_true:
+                arguments:
+                    expression: "BETWEEN 41.6 AND 42.1"
+                config:
+                    where: "start_lat IS NOT NULL"
+            - not_null:
+                config:
+                    where: "end_lat IS NOT NULL"
+        - name: start_lng
+          config:
+              tags: ["start_lng"]
+          data_tests:
+            - dbt_utils.expression_is_true:
+                arguments:
+                    expression: "BETWEEN -87.9 AND -87.5"
+                config:
+                    where: "start_lng IS NOT NULL"
+            - not_null:
+                config:
+                    where: "end_lng IS NOT NULL"
+        - name: end_lat
+          config:
+              tags: ["end_lat"]
+          data_tests:
+            - dbt_utils.expression_is_true:
+                arguments:
+                    expression: "BETWEEN 41.6 AND 42.1"
+                config:
+                    where: "end_lat IS NOT NULL"
+        - name: end_lng
+          config:
+              tags: ["end_lng"]
+          data_tests:
+            - dbt_utils.expression_is_true:
+                arguments:
+                    expression: "BETWEEN -87.9 AND -87.5"
+                config:
+                    where: "end_lng IS NOT NULL"
