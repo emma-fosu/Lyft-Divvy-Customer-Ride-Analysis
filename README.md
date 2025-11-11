@@ -110,3 +110,33 @@ The new table (`divvy_tripdata_2024`) containing the appended datasets was teste
 | `end_lng` | double | `expression_is_true` | End longitude must fall within Chicago area |
 | `member_casual` | string  | `not_null` | Membership type must be present  |
 |                 |         | `accepted_values` | Only “member” or “casual” allowed |
+
+### Additional Data Tables
+1. **Ride Date Table**: This table provides time-based attributes derived from each ride’s timestamp (ride_datetime). It is designed to support detailed temporal analysis of ride behavior, trends, and patterns such as demand by day, month, hour, or weekday.
+
+| **Column Name** | **Data Type** |**Description** |
+| ----------------| ------------- | ---------------|
+| **ride_datetime** | `timestamp` | The exact date and time when the ride event occurred. This is the raw timestamp from which other time attributes are derived. |
+| **ride_date** | `date` | The calendar date (without time) extracted from `ride_datetime`. Useful for grouping or filtering rides by date. |
+| **year** | `int` | The four-digit year in which the ride took place (e.g., 2024). |
+| **month_num** | `int` | The numeric value of the month (1–12) corresponding to `ride_datetime`. |
+| **month** | `string` | The full or abbreviated month name (e.g., “January”). |
+| **week_of_year** | `int` | The week number of the year (1–52) when the ride occurred.  |
+| **day_of_week_num** | `int` | Numeric representation of the day of the week (e.g., 1 = Monday, 7 = Sunday). |
+| **day_of_week** | `string` | Textual representation of the day of the week (e.g., “Monday”, “Tuesday”). |
+| **hour_am_pm** | `string` | The hour of the ride with AM/PM designation (e.g., “08 AM”, “03 PM”). |
+
+### Purpose and Use
+1. This table serves as a time dimension for ride data analysis. It allows data analysts and engineers to:
+2. Aggregate rides by date, day, or hour for trend analysis.
+3. Identify peak riding hours and weekday vs weekend demand.
+4. Perform seasonal, monthly, and yearly comparisons.
+5. Simplify joins with ride fact tables in analytics pipelines.
+
+2. **US Holidays Table**:
+This table contains a list of recognized holidays with their corresponding dates. It serves as a reference for identifying whether a given ride or event occurred on a holiday, supporting temporal and behavioral analyses such as demand variation, staffing, or scheduling around public holidays.
+| **Column Name**  | **Data Type** | **Description** |
+| ---------------- | ------------- | --------------- |
+| **date** | `date` | The calendar date of the holiday (in `yyyy-MM-dd` format). This field is used to join with the `ride_date` column in other tables for identifying rides occurring on holidays. |
+| **holiday_name** | `string` | The official name or title of the holiday (e.g., “New Year’s Day”, “Independence Day”). |
+
