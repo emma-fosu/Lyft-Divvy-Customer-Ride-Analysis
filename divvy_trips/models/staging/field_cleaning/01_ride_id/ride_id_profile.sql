@@ -1,7 +1,6 @@
 WITH duplicate_rides AS (
     SELECT
-        ride_id,
-        COUNT(*) as d_count
+        ride_id
     FROM
         {{ ref('stag_divvy_tripdata_2024') }}
     GROUP BY ride_id
@@ -9,9 +8,7 @@ WITH duplicate_rides AS (
 ), 
 duplicate_rides_info AS (
     SELECT
-        ride_id,
-        started_at,
-        ended_at
+        *
     FROM
         duplicate_rides
     INNER JOIN
@@ -38,7 +35,7 @@ time_diff AS (
     GROUP BY ride_id
 )
 
-SELECT * FROM time_diff
+SELECT * FROM duplicate_rides_info
 
 {# The duplicate rides record seem to be the same because their start time and end time difference is 0 #}
 {# Action: Remove one of the duplicated ride #}

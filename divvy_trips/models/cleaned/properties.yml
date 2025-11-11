@@ -2,6 +2,8 @@ models:
     - name: cleaned_divvy_tripdata_2024
       columns:
         - name: ride_id
+          config:
+            tags: ["cleaned_ride_id"]
           data_tests:
             - unique
             - not_null
@@ -12,12 +14,16 @@ models:
                 arguments:
                   expression: "{{ column_name }} RLIKE '^[A-F0-9]{16}$'"
         - name: started_at
+          config: 
+            tags: ["cleaned_started_at"]
           data_tests:
             - not_null
             - dbt_utils.expression_is_true:
                 arguments:
                   expression: "<= ended_at"
         - name: ended_at
+          config:
+            tags: ["cleaned_ended_at"]
           data_tests:
             - not_null
             - dbt_utils.expression_is_true:
@@ -25,7 +31,7 @@ models:
                   expression: ">= started_at"
         - name: rideable_type
           config:
-              tags: [rideable_type]
+              tags: [cleaned_rideable_type]
           data_tests:
             - not_null
             - accepted_values:
@@ -33,7 +39,7 @@ models:
                     values: ["Electric Bike", "Classic Bike", "Scooter", "Electric Scooter", "Unknown Rideable"]
         - name: member_casual
           config:
-              tags: [member_casual]
+              tags: [cleaned_member_casual]
           data_tests:
             - not_null
             - accepted_values:
@@ -41,56 +47,68 @@ models:
                     values: ["Member", "Casual"]
         - name: start_station_name
           config:
-              tags: [start_station_name]
+              tags: [cleaned_start_station_name]
           data_tests:
             - not_null
             - dbt_utils.expression_is_true:
                 arguments:
                   expression: "NOT {{column_name}} RLIKE '^[[:space:]]+$'"
         - name: end_station_name
+          config: 
+            tags: ["cleaned_end_station_name"]
           data_tests:
             - not_null:
                 config:
                   where: "end_station_id IS NOT NULL"
         - name: start_lat
           config:
-              tags: ["start_lat"]
+              tags: ["cleaned_start_lat"]
           data_tests:
             - dbt_utils.expression_is_true:
                 arguments:
-                    expression: "BETWEEN 41.6 AND 42.1"
+                    column_name: ""
+                    expression: "start_lat >= 41.6 AND start_lat <= 42.1"
                 config:
                     where: "start_lat IS NOT NULL"
             - not_null:
                 config:
-                    where: "end_lat IS NOT NULL"
+                    where: "start_lat IS NOT NULL"
         - name: start_lng
           config:
-              tags: ["start_lng"]
+              tags: ["cleaned_start_lng"]
           data_tests:
             - dbt_utils.expression_is_true:
                 arguments:
-                    expression: "BETWEEN -87.9 AND -87.5"
+                    column_name: ""
+                    expression: "start_lng >= -87.9 AND start_lng <= -87.5"
                 config:
                     where: "start_lng IS NOT NULL"
             - not_null:
                 config:
-                    where: "end_lng IS NOT NULL"
+                    where: "start_lng IS NOT NULL"
         - name: end_lat
           config:
-              tags: ["end_lat"]
+              tags: ["cleaned_end_lat"]
           data_tests:
             - dbt_utils.expression_is_true:
                 arguments:
-                    expression: "BETWEEN 41.6 AND 42.1"
+                    column_name: ""
+                    expression: "end_lat >= 41.6 AND end_lat <= 42.1"
                 config:
                     where: "end_lat IS NOT NULL"
+            - not_null:
+                config:
+                  where: "end_lat IS NOT NULL"
         - name: end_lng
           config:
-              tags: ["end_lng"]
+              tags: ["cleaned_end_lng"]
           data_tests:
             - dbt_utils.expression_is_true:
                 arguments:
-                    expression: "BETWEEN -87.9 AND -87.5"
+                    column_name: ""
+                    expression: "end_lng >= -87.9 AND end_lng <= -87.5"
                 config:
                     where: "end_lng IS NOT NULL"
+            - not_null:
+                config:
+                  where: "end_lat IS NOT NULL"
