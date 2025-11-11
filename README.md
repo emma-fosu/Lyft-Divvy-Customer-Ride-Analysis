@@ -135,6 +135,7 @@ The new table (`divvy_tripdata_2024`) containing the appended datasets was teste
 
 2. **US Holidays Table**:
 This table contains a list of recognized holidays with their corresponding dates. It serves as a reference for identifying whether a given ride or event occurred on a holiday, supporting temporal and behavioral analyses such as demand variation, staffing, or scheduling around public holidays.
+
 | **Column Name**  | **Data Type** | **Description** |
 | ---------------- | ------------- | --------------- |
 | **date** | `date` | The calendar date of the holiday (in `yyyy-MM-dd` format). This field is used to join with the `ride_date` column in other tables for identifying rides occurring on holidays. |
