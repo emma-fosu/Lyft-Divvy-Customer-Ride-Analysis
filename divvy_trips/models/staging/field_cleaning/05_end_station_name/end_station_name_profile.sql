@@ -28,11 +28,19 @@ WITH station_with_no_name_count AS (
             WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 120 THEN '1-2 hrs'
             ELSE '2+ hrs'
         END AS duration_bucket,
-        COUNT(*) AS num_rides
+        COUNT(*) AS num_rides,
+        CASE
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 1 THEN 1
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 10 THEN 2
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 20 THEN 3
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 30 THEN 4
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 60 THEN 5
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 120 THEN 6
+            ELSE 7
+        END AS sort_key
     FROM {{ ref('stag_divvy_tripdata_2024') }}
     WHERE end_station_name IS NULL AND ended_at > started_at
-    GROUP BY duration_bucket
-    ORDER BY MIN(TIMESTAMPDIFF(MINUTE, started_at, ended_at))
+    GROUP BY duration_bucket, sort_key
 ), station_with_no_name_end_lat_lng_duration_distribution AS (
     SELECT
         CASE
@@ -44,11 +52,19 @@ WITH station_with_no_name_count AS (
             WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 120 THEN '1-2 hrs'
             ELSE '2+ hrs'
         END AS duration_bucket,
-        COUNT(*) AS num_rides
+        COUNT(*) AS num_rides,
+         CASE
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 1 THEN 1
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 10 THEN 2
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 20 THEN 3
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 30 THEN 4
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 60 THEN 5
+            WHEN TIMESTAMPDIFF(MINUTE, started_at, ended_at) < 120 THEN 6
+            ELSE 7
+        END AS sort_key
     FROM {{ ref('stag_divvy_tripdata_2024') }}
     WHERE end_station_name IS NULL AND end_lat IS NULL AND end_lng IS NULL AND ended_at > started_at
-    GROUP BY duration_bucket
-    ORDER BY MIN(TIMESTAMPDIFF(MINUTE, started_at, ended_at))
+    GROUP BY duration_bucket, sort_key
 )
 
 SELECT

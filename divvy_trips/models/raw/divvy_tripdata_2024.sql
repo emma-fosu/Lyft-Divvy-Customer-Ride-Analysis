@@ -4,16 +4,15 @@
     )
 }}
 
-{%- set months = range(1, 13) -%}
-{%- set table_names = [] -%}
-{%- for month in months -%}
-  {%- do table_names.append("2024" ~ "{:02d}".format(month) ~ "_divvy_tripdata") -%}
-{% endfor %}
+{% set tables = dbt_utils.get_relations_by_pattern(
+    schema_pattern='default',
+    table_pattern='2024%_divvy_tripdata'
+) %}
 
-{%- for table_name in table_names -%}
-    SELECT *
-    FROM {{ source('divvy_trip_app', table_name) }}
-    {% if not loop.last %}
-      UNION ALL
-    {% endif %}
+{% for table in tables %}
+SELECT *
+FROM {{ table }}
+{% if not loop.last %}
+UNION ALL
+{% endif %}
 {% endfor %}

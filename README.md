@@ -114,24 +114,25 @@ The new table (`divvy_tripdata_2024`) containing the appended datasets was teste
 ### Additional Data Tables
 1. **Ride Date Table**: This table provides time-based attributes derived from each ride’s timestamp (ride_datetime). It is designed to support detailed temporal analysis of ride behavior, trends, and patterns such as demand by day, month, hour, or weekday.
 
-| **Column Name** | **Data Type** |**Description** |
-| ----------------| ------------- | ---------------|
-| **ride_datetime** | `timestamp` | The exact date and time when the ride event occurred. This is the raw timestamp from which other time attributes are derived. |
-| **ride_date** | `date` | The calendar date (without time) extracted from `ride_datetime`. Useful for grouping or filtering rides by date. |
-| **year** | `int` | The four-digit year in which the ride took place (e.g., 2024). |
-| **month_num** | `int` | The numeric value of the month (1–12) corresponding to `ride_datetime`. |
-| **month** | `string` | The full or abbreviated month name (e.g., “January”). |
-| **week_of_year** | `int` | The week number of the year (1–52) when the ride occurred.  |
-| **day_of_week_num** | `int` | Numeric representation of the day of the week (e.g., 1 = Monday, 7 = Sunday). |
-| **day_of_week** | `string` | Textual representation of the day of the week (e.g., “Monday”, “Tuesday”). |
-| **hour_am_pm** | `string` | The hour of the ride with AM/PM designation (e.g., “08 AM”, “03 PM”). |
+  | **Column Name** | **Data Type** |**Description** |
+  | ----------------| ------------- | ---------------|
+  | **ride_datetime** | `timestamp` | The exact date and time when the ride event occurred. This is the raw timestamp from which other time attributes are derived. |
+  | **ride_date** | `date` | The calendar date (without time) extracted from `ride_datetime`. Useful for grouping or filtering rides by date. |
+  | **year** | `int` | The four-digit year in which the ride took place (e.g., 2024). |
+  | **month_num** | `int` | The numeric value of the month (1–12) corresponding to `ride_datetime`. |
+  | **month** | `string` | The full or abbreviated month name (e.g., “January”). |
+  | **week_of_year** | `int` | The week number of the year (1–52) when the ride occurred.  |
+  | **day_of_week_num** | `int` | Numeric representation of the day of the week (e.g., 1 = Monday, 7 = Sunday). |
+  | **day_of_week** | `string` | Textual representation of the day of the week (e.g., “Monday”, “Tuesday”). |
+  | **hour_am_pm** | `string` | The hour of the ride with AM/PM designation (e.g., “08 AM”, “03 PM”). |
 
-### Purpose and Use
-1. This table serves as a time dimension for ride data analysis. It allows data analysts and engineers to:
-2. Aggregate rides by date, day, or hour for trend analysis.
-3. Identify peak riding hours and weekday vs weekend demand.
-4. Perform seasonal, monthly, and yearly comparisons.
-5. Simplify joins with ride fact tables in analytics pipelines.
+  #### Purpose and Use
+  1. This table serves as a time dimension for ride data analysis. It allows data analysts and engineers to:
+  2. Aggregate rides by date, day, or hour for trend analysis.
+  3. Identify peak riding hours and weekday vs weekend demand.
+  4. Perform seasonal, monthly, and yearly comparisons.
+  5. Simplify joins with ride fact tables in analytics pipelines.
+  
 
 2. **US Holidays Table**:
 This table contains a list of recognized holidays with their corresponding dates. It serves as a reference for identifying whether a given ride or event occurred on a holiday, supporting temporal and behavioral analyses such as demand variation, staffing, or scheduling around public holidays.
@@ -141,3 +142,19 @@ This table contains a list of recognized holidays with their corresponding dates
 | **date** | `date` | The calendar date of the holiday (in `yyyy-MM-dd` format). This field is used to join with the `ride_date` column in other tables for identifying rides occurring on holidays. |
 | **holiday_name** | `string` | The official name or title of the holiday (e.g., “New Year’s Day”, “Independence Day”). |
 
+
+
+4. Growth opportunity
+
+Casual riders still contribute 2.05 million rides, meaning:
+
+There’s a large pool of potential members.
+
+Targeted conversion strategies (discounts, trial memberships, event-based promos) could grow membership revenue.
+
+## Insights
+1. The data reveals that members account for a significantly larger share of total rides, contributing 64% of all trips compared to 36% from casual riders. This suggests that members are far more consistent and frequent users of the system, indicating strong retention and habitual riding patterns. However, it is important to note that the frequency of rides reflects only the number of trips taken and does not necessarily imply longer distances or extended ride durations. Further analysis is needed to understand trip characteristics and to identify specific situations, locations, or time periods where casual riders may exceed members in usage.
+2. The analysis of median trip duration and distance reveals clear behavioral differences between casual and member riders. Although both groups travel nearly identical distances—about 1.6 km on average—casual riders take significantly longer to complete their trips, with a median duration of 12 minutes compared to 8 minutes for members. This indicates that the key difference between the two groups is not how far they travel, but how they travel. Members appear to ride more efficiently, consistent with routine, purpose-driven trips such as commuting, while casual riders likely use the service for leisure, sightseeing, or unfamiliar navigation, resulting in slower and longer rides. These patterns highlight two distinct user behaviors within the system and suggest that further analysis of ride patterns by time of day, day of week, and station location will provide deeper insight into how and when each group uses the service.
+3. The analysis of ride counts and median trip duration across the week reveals clear patterns in rider behavior. From Monday to Friday, the median trip duration is 8 minutes, while ride counts are highest on Wednesday (598,380 rides), indicating a consistent weekday usage pattern likely linked to commuting or routine trips. On Saturday and Sunday, the median trip duration increases to 9 minutes, while ride counts drop, suggesting that weekend rides are fewer but slightly longer, reflecting leisure or recreational use. These trends highlight a distinct difference between weekday utility rides and weekend recreational rides, providing actionable insights for bike availability planning, rebalancing strategies, and targeted promotions for casual riders during weekends.
+
+note:

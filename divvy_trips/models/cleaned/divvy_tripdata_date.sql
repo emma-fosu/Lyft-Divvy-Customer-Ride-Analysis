@@ -7,7 +7,8 @@ SELECT
     EXTRACT(WEEK FROM ride_datetime) AS week_of_year,
     (DAYOFWEEK(ride_datetime) + 5) % 7 + 1 AS day_of_week_num,
     DATE_FORMAT(ride_datetime, 'EEEE') AS day_of_week,
-    DATE_FORMAT(ride_datetime, 'h a') AS hour_am_pm
+    DATE_FORMAT(ride_datetime, 'h a') AS hour_am_pm,
+    EXTRACT(HOUR FROM ride_datetime) AS hour_num
 FROM (
     SELECT
         DISTINCT started_at AS ride_datetime
