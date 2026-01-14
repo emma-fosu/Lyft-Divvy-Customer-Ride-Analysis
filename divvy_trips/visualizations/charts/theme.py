@@ -9,14 +9,17 @@ def divvy_trip_theme() -> alt.theme.ThemeConfig:
             "font": "Roboto",
             "customFormatTypes": True,
             "title": {
-               "font": "Roboto",
+               "font": "Geist",
                "fontWeight": 600,
                "fontSize": 25,
-               "color": "#031b42",
+               "color": "#636363",
                "subtitleColor": "#747474",
                "subtitleFontSize": 14,
+               "subtitleFont": "Geist",
                "anchor": "start",
-               "offset": 60
+               "offset": 60,
+               "lineHeight": 32,
+               "subtitlePadding": 10
             },
             "axisX": {
                 "ticks": False,
@@ -55,7 +58,7 @@ def divvy_trip_theme() -> alt.theme.ThemeConfig:
                 "cornerRadiusTopRight": 5
             },
             "text": {
-                "font": "Roboto",
+                "font": "Geist",
                 "align": "center"
             },
             "line": {

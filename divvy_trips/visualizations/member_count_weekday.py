@@ -6,6 +6,7 @@ from utils import get_model_data
 from pathlib import Path
 from .charts import theme
 from .charts import open_image
+import numpy as np
 
 
 parser = argparse.ArgumentParser()
@@ -42,12 +43,14 @@ async def draw():
        x=alt.X("Day of Week:N").title(None).sort(data["Day of Week Sort"], order="ascending")
     ).properties(width=700)
 
-    countLine = base.mark_line().encode(
+    countLine = base.mark_line(
+        color=theme.themeColor[1]
+    ).encode(
          y=alt.Y("Ride Count:Q").axis(title="Rides Count", format=".0s").scale(domain=[400000, 600000])
     )
 
     durationLine = base.mark_line(
-        color="#4c78a871",
+        color="#9a4ca870",
         strokeWidth=2,
         strokeDash=[4, 4]
     ).encode(
@@ -73,13 +76,13 @@ async def draw():
         fontWeight=400,
         align="left",
         lineHeight=20,
-        color="#325172",
+        color="#490E40",
         dy=-180,
-        dx=-220
+        dx=-240
     ).transform_filter(
         alt.datum['Day of Week'] == 'Saturday'
     ).transform_calculate(
-        text="['Weekend rides barely increased by 11%', 'despite fewer trips.']"
+        text="['Ride duration on weekends', 'barely increased by 11%', 'despite fewer trips.']"
     ).encode(
         text="text:N"
     ) + arrowImage
@@ -113,6 +116,12 @@ async def draw():
         text="text"
     )
 
+    isWeekend = data['Day of Week'].isin(['Sunday', 'Saturday'])
+
+    weekendTotal = np.mean(data.loc[isWeekend, 'Ride Count'])
+    weekdayTotal = np.mean(data.loc[~isWeekend, 'Ride Count'])
+    diffPerc = round((weekdayTotal - weekendTotal) * 100 / weekdayTotal)
+
     wednesdayText = alt.layer(wednesdayText1)
     countLine = (countLine + wednesdayText)
     chart =  alt.vconcat(
@@ -127,8 +136,8 @@ async def draw():
 
     chart = chart.properties(
         title=alt.Title(
-            text="Riding Through the Week: How Trips Vary by Day",
-            subtitle="Member Riders Only"
+            text=["Members Primarily Use the System for Weekday Transportation"],
+            subtitle=[f"Members engagement decreased by {diffPerc}% during weekends averagely."]
         ),
     )
     

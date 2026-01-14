@@ -32,9 +32,9 @@ async def draw():
         data
     ).encode(
        x=alt.X("Rider Type:N"),
-       y=alt.Y("Total Rides:Q", axis=alt.Axis(format=".1s")),
+       y=alt.Y("Total Rides:Q", axis=None),
        color=alt.Color("Rider Type:N").legend(None).scale(domain=data["Rider Type"], range=theme.themeColor),
-    ).properties(width=300)
+    ).properties(width=350)
 
     bar = base.mark_bar()
 
@@ -50,8 +50,7 @@ async def draw():
     kpi_data = pd.DataFrame({
         'main_text': [data.loc[data['Rider Type'] == 'Member', 'Proportion (%)']],
         'sub_text': [
-            ['of rides is Member account.', 
-             ' ',
+            ['of rides are Member subscribers.', 
              'Higher frequency indicates not a one-time or ',
              'occasional customer, but strong engagement ',
              'and repeat usage.']
@@ -63,7 +62,7 @@ async def draw():
     boldText = emphasisBase.mark_text(
         fontSize=130,
         fontWeight='bold',
-        color='#f58518',
+        color= theme.themeColor[1],
         align='left',
         baseline='top'
     ).encode(
@@ -77,17 +76,17 @@ async def draw():
         color="#5A5A5A",
         align='left',
         baseline='top',
-        lineHeight=20
+        lineHeight=24
     ).encode(
         x=alt.value(10),
-        y=alt.value(115),
+        y=alt.value(119),
         text='sub_text'
     )
 
     note_data = pd.DataFrame({
         "text": [[
-                "** Frequency refers strictly to trip counts, not trip length or time.",
-                "Further investigation is necessary to explore scenarios where casual riders may outnumber member" 
+                "** Frequency refers strictly to the number of trips, not length or time of each trip.",
+                "Further investigation is necessary to explore scenarios where Casuals may outnumber Members." 
         ]]
     })
 
@@ -104,11 +103,11 @@ async def draw():
 
     kpi_text = boldText + sub_label
     barchart = bar + text
-    chart =  alt.vconcat(barchart | kpi_text, note)
+    chart =  alt.vconcat(alt.hconcat(barchart, kpi_text, spacing=30), note)
 
     chart = chart.properties(
         title=alt.Title(
-            text="Who Rides the Most?",
+            text="Member Subscribers Ride the Most",
         ),
     )
     

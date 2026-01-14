@@ -23,13 +23,10 @@ OPTIONS = {
 
 alt.renderers.enable("browser")
 
-arrow_url = Path("visualizations/assets/arrow_left_down.png").resolve()
-
 async def draw():
-    # arrow_image_data = open_image(arrow_url, rotate=-40)
-    
+
+    BASE_DIR = Path(__file__).resolve().parent
     if (OPTIONS.get("useTestData")):
-        BASE_DIR = Path(__file__).resolve().parent
         csv_path = BASE_DIR / "test data" / "top_10_start_location_casual_member.csv"
         startStationData = pd.read_csv(csv_path)
 
@@ -39,11 +36,19 @@ async def draw():
         startStationData = await get_model_data("top_10_start_location_casual_member", options=OPTIONS)
         endStationData = await get_model_data("top_10_end_location_casual_member", options=OPTIONS)
 
+    csv_path = BASE_DIR / "test data" / "casual_station_image.csv"
+    startStationMap = pd.read_csv(csv_path)
+    startStationData = pd.merge(startStationData, startStationMap, on="Station Name", how="left")
+
     chicago =  geopd.read_file(filename="https://data.cityofchicago.org/resource/unjd-c2ca.geojson")
     centroids = chicago.geometry.union_all().centroid
     center = [centroids.x, centroids.y]
+    width = 300
+    height = 500
 
-    selection = alt.selection_point(fields=['Rider Type'], bind='legend')
+    selection = alt.selection_point(
+        fields=["Rider Type"]
+    )
 
     california_map = alt.Chart(chicago).mark_geoshape(
         fill="#f2f2f2",
@@ -54,10 +59,10 @@ async def draw():
         type="mercator",
         center=center,
         scale=85000,
-        translate=[600/2, 600/2]
+        translate=[width/2, height/2]
     ).properties(
-        width=600,
-        height=600
+        width=width,
+        height=height
     )
 
     points = alt.Chart(startStationData).mark_circle(
@@ -66,15 +71,15 @@ async def draw():
         longitude='lng:Q',
         latitude='lat:Q',
         size=alt.Size('Ride Count:Q', scale=alt.Scale(domain=startStationData['Ride Count'], range=np.array(startStationData['Ride Count']) / 50)).legend(None),
-        color=alt.Color("Rider Type:N"),
+        color=alt.Color("Rider Type:N").legend(None).scale(domain=startStationData['Rider Type'], range=theme.themeColor),
         opacity=alt.condition(selection, alt.value(0.8), alt.value(0.2)),
-        tooltip=alt.Tooltip('Station Name:N')
+        tooltip=alt.Tooltip(['Station Name'])
     ).project(
         type="mercator",
         center=center,
         scale=85000,
-        translate=[600/2, 600/2]
-        ).add_params(selection)
+        translate=[width/2, height/2]
+        )
 
     points2 = alt.Chart(endStationData).mark_circle(
         
@@ -82,25 +87,56 @@ async def draw():
         longitude='lng:Q',
         latitude='lat:Q',
         size=alt.Size('Ride Count:Q', scale=alt.Scale(domain=startStationData['Ride Count'], range=np.array(startStationData['Ride Count']) / 50)).legend(None),
-        color=alt.Color("Rider Type:N"),
+        color=alt.Color("Rider Type:N").legend(None).scale(domain=startStationData['Rider Type'], range=theme.themeColor),
         opacity=alt.condition(selection, alt.value(0.8), alt.value(0.2)),
         tooltip=alt.Tooltip('Station Name:N')
     ).project(
         type="mercator",
         center=center,
         scale=85000,
-        translate=[600/2, 600/2]
+        translate=[width/2, height/2]
         )
+    
+    legendData = pd.DataFrame({
+        "Rider Type": ["Casual", "Member"],
+        "color": [theme.themeColor[0], theme.themeColor[1]],
+        "x": [0, 15]
+    })
 
+    legendBase = alt.Chart(legendData).encode( x=alt.X("x:Q").axis(None))
+
+    legendText = legendBase.mark_text(
+        align="left",
+        dx=10,
+        dy=1
+    ).encode(
+        text=alt.Text("Rider Type:N"),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2)),
+    )
+
+    legendCircle = legendBase.mark_circle().encode(
+        size=alt.value(120),
+        color=alt.Color("Rider Type:N", scale=alt.Scale(domain=legendData['Rider Type'], range=legendData['color'])).legend(None),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.2)),
+    )
+
+    legendChart = (legendText + legendCircle).add_params(selection).properties(width=100)
     geoChart1 = (california_map + points)
     geoChart2 = (california_map + points2)
-    alt.hconcat(geoChart1, geoChart2, center=True).configure_legend(
-        orient="bottom",
-        title=None,
-        symbolSize=120,
-        direction="horizontal",
-        labelFontSize=14,
-    ).resolve_legend(color="shared").show()
+    chart = alt.vconcat(
+        alt.hconcat(geoChart1, geoChart2, center=True, spacing=150),
+        legendChart,
+        spacing=30,
+        center=True
+    )
+
+    chart = chart.properties(
+        title=alt.Title(
+            text=[f"Casual Engages More in Weekends than in Weekdays", f"with min Longer Rides"]
+        ),
+    )
+
+    chart.show()
 
 
 

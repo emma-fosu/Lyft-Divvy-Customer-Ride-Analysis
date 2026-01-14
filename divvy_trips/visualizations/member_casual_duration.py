@@ -33,14 +33,14 @@ async def draw():
         data
     ).encode(
        x=alt.X("Rider Type:N"),
-       y=alt.Y("Duration (min):Q", axis=alt.Axis(labelExpr="datum.value + 'min'", title="Duration")),
-       color=alt.Color("Rider Type:N").legend(None),
+       y=alt.Y("Duration (min):Q", axis=alt.Axis(title="Duration", labels=False)),
+       color=alt.Color("Rider Type:N").legend(None).scale(domain=data['Rider Type'], range=theme.themeColor),
     ).transform_calculate(
         duration_label="datum['Duration (min)'] + ' min'"
     )
 
     chart1 = base1.mark_bar().properties(
-        width=200
+        width=300
     )
 
     text1 = base1.mark_text(
@@ -56,13 +56,13 @@ async def draw():
         data
     ).encode(
        x=alt.X("Rider Type:N"),
-       y=alt.Y("Distance (km):Q", axis=alt.Axis(labelExpr="datum.value + 'km'", title="Distance")),
-       color=alt.Color("Rider Type:N").legend(None),
+       y=alt.Y("Distance (km):Q", axis=alt.Axis(title="Distance", labels=False)),
+       color=alt.Color("Rider Type:N").legend(None).scale(domain=data["Rider Type"], range=theme.themeColor),
     ).transform_calculate(
-        distance_label="datum['Distance (km)'] + ' km'"
+        distance_label="format(datum['Distance (km)'], '.2f') + ' km'"
     )
 
-    chart2 = base2.mark_bar().properties(width=200)
+    chart2 = base2.mark_bar().properties(width=300)
 
     text2 = base2.mark_text(
         baseline='bottom',
@@ -73,58 +73,10 @@ async def draw():
         text=alt.Text("distance_label:N")
     )
 
-    duration = (data.loc[data['Rider Type'] == 'Casual', 'Duration (min)']).iloc[0] - (data.loc[data['Rider Type'] == 'Member', 'Duration (min)']).iloc[0]
-    kpi_data = pd.DataFrame({
-        'text1': [['Both fairly rides the same distance but,', 'Casual goes']],
-        'text2': ['more than Member.'],
-        'duration': [
-            str(duration) +
-            ' min'
-        ]
-    })
-
-    emphasisBase = alt.Chart(kpi_data).properties(width=300)
-
-    stext1 = alt.Chart(kpi_data).mark_text(
-        fontSize=13,
-        font="Inter",
-        color="#5A5A5A",
-        align='left',
-        baseline='top',
-        lineHeight=25
-    ).encode(
-        x=alt.value(0),
-        y=alt.value(0),
-        text='text1'
-    )
-    stext2 = alt.Chart(kpi_data).mark_text(
-        fontSize=13,
-        font="Inter",
-        color="#5A5A5A",
-        align='left',
-        baseline='top',
-        lineHeight=20
-    ).encode(
-        x=alt.value(0),
-        y=alt.value(135),
-        text='text2'
-    )
-    durationText = emphasisBase.mark_text(
-        fontSize=110,
-        fontWeight='bold',
-        color='#4c78a8',
-        align='left',
-        baseline='top'
-    ).encode(
-        x=alt.value(0),
-        y=alt.value(40),
-        text=alt.Text("duration")
-    )
-
     note_data = pd.DataFrame({
         "text": [[
                 "** Equal distances do not imply similar riding speeds.",
-                "Longer duration for casual riders suggests behavioral differences and may require further investigation." 
+                "A longer duration for casual riders suggests behavioral differences and may require further investigation." 
         ]]
     })
 
@@ -139,21 +91,12 @@ async def draw():
         text="text"
     )
 
-    kpi_text = stext1 + stext2 + durationText
-
     barchart1 = chart1 + text1
     barchart2 = chart2 + text2
-    chart =  alt.vconcat(
-                alt.hconcat(
-                    alt.hconcat(barchart1, barchart2, spacing=20), 
-                    kpi_text, spacing=50),
-                note)
+    chart =  alt.vconcat(alt.hconcat(barchart1, barchart2, spacing=30), note)
 
     chart = chart.properties(
-        title=alt.Title(
-            text="Frequent Riders, Shorter Duration, Longer Distance?",
-            subtitle="Does the notion longer ride time always means longer distance?"
-        ),
+        title=["Same Distance Covered", "But Casuals Ride 4 min Longer."]
     ).configure_axisY(
         titleColor="#818181",
         titleFontWeight=400,

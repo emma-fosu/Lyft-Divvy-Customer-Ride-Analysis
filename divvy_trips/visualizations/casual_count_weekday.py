@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import numpy as np
 import pandas as pd
 import altair as alt
 from utils import get_model_data
@@ -113,7 +114,15 @@ async def draw():
         text="text"
     )
 
-    wednesdayText = alt.layer(wednesdayText1)
+    isWeekend = data['Day of Week'].isin(['Sunday', 'Saturday'])
+
+    weekendTotal = np.mean(data.loc[isWeekend, 'Ride Count'])
+    weekdayTotal = np.mean(data.loc[~isWeekend, 'Ride Count'])
+    diffPerc = round((weekendTotal- weekdayTotal) * 100 / weekdayTotal)
+    weekendTotalDur = np.mean(data.loc[isWeekend, 'Duration (min)'])
+    weekdayTotalDur = np.mean(data.loc[~isWeekend, 'Duration (min)'])
+    diffDur = round((weekendTotalDur- weekdayTotalDur))
+
     countLine = (countLine)
     chart =  alt.vconcat(
     (alt.layer(
@@ -127,8 +136,7 @@ async def draw():
 
     chart = chart.properties(
         title=alt.Title(
-            text="Riding Through the Week: How Trips Vary by Day",
-            subtitle="Casual Riders Only"
+            text=[f"Casual Engages {diffPerc}% More in Weekends than in Weekdays", f"with {diffDur} min Longer Rides"]
         ),
     )
     

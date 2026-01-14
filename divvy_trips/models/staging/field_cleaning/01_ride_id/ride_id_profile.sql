@@ -35,7 +35,7 @@ time_diff AS (
     GROUP BY ride_id
 )
 
-SELECT * FROM duplicate_rides_info
+SELECT COUNT(DISTINCT *) FROM duplicate_rides
 
 {# The duplicate rides record seem to be the same because their start time and end time difference is 0 #}
 {# Action: Remove one of the duplicated ride #}

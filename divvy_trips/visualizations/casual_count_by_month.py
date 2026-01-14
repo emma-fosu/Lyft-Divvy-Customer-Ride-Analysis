@@ -24,88 +24,76 @@ alt.renderers.enable("browser")
 arrow_url = Path("visualizations/assets/arrow_left_down.png").resolve()
 
 async def draw():
-    arrow_image_data = open_image(arrow_url, rotate=-40)
     
     if (OPTIONS.get("useTestData")):
         data = pd.DataFrame({
         "Month": [
             "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug",
-            "Sept","Oct","Nov","Dec"
+            "Sep","Oct","Nov","Dec"
         ],
-        "Month Sort": list(range(1, 13)),
+        "Month Sort": [1,2,3,4,5,6,7,8,9,10,11,12],
         "Ride Count": [
             23453,45551,79421,125864,219378,285465,304612,303141,
             330811,207728,89938,37151
-        ],
-        "Duration (min)": [
-            7,9,10,12,13,13,13,13,11,11,9,8
         ]
     })
+        data2 = pd.DataFrame({
+            "Month": [
+                "Jan","Feb","Mar","Apr","May","Jun",
+                "Jul","Aug","Sep","Oct","Nov","Dec"
+            ],
+            "Month Sort": [1,2,3,4,5,6,7,8,9,10,11,12],
+            "Ride Count": [
+                116079,172342,214033,276286,369259,401307,
+                421087,429440,464902,394054,238352,137195
+            ],
+            "Duration (min)": [7,8,8,8,9,9,9,9,8,8,7,7]
+        })
     else:
+        print(__file__)
         data = await get_model_data(__file__, options=OPTIONS)
+        data2 = await get_model_data("member_count_by_month.py", options=OPTIONS)
 
     base = alt.Chart(
         data
-    ).encode(
-       x=alt.X("Month:N").title(None).sort(data["Month Sort"], order="ascending")
-    ).properties(width=700)
+    ).encode().properties(width=700)
 
     countLine = base.mark_line().encode(
-         y=alt.Y("Ride Count:Q").axis(title="Rides Count", format=".0s").scale(domain=[22000, 305000])
+        y=alt.Y("Ride Count:Q").axis(title=None, format=".0s").scale(domain=[22000, 305000]),
+        color=alt.value(theme.themeColor[0])
     )
 
-    durationLine = base.mark_line(
-        color="#4c78a871",
-        strokeWidth=2,
-        strokeDash=[4, 4]
-    ).encode(
-        y=alt.Y("Duration (min)").axis(title="Duration", labelExpr="datum.value + ' min'").scale(domain=[6, 15])
+    countLine2 = alt.Chart(data=data2).mark_line().encode(
+        y=alt.Y("Ride Count:Q").axis(title=None, format=".0s").scale(domain=[100000, 500000]),
+        color=alt.value(theme.themeColor[1])
     )
 
-    arrowImage = countLine.mark_image(
-        width=50,
-        height=50,
-        yOffset=-220,
-        xOffset=-20
-    ).transform_filter(
-        alt.datum['Month'] == 'Saturday'
-    ).transform_calculate(
-        url=f"'{arrow_image_data}'"
-    ).encode(
-        url="url:N"
-    )
+    legendData = pd.DataFrame({
+        "name": ["Casual", "Member"],
+        "color": theme.themeColor,
+        "x": [0, 10]
+    })
 
-    wednesdayText1 = base.mark_text(
-        baseline='bottom',
-        fontSize=15,
-        fontWeight=400,
+    legendBase = alt.Chart(legendData).encode( x=alt.X("x:Q").axis(None)).properties(width=100)
+
+    legendText = legendBase.mark_text(
         align="left",
-        lineHeight=20,
-        color="#325172",
-        dy=-180,
-        dx=-220
-    ).transform_filter(
-        alt.datum['Month'] == 'Saturday'
-    ).transform_calculate(
-        text="['Weekend rides are 40%', 'longer despite fewer trips.']"
+        dx=10,
+        dy=1
     ).encode(
-        text="text:N"
-    ) + arrowImage
-
-    weekend_band = base.mark_rect(
-        opacity=0.2,
-        color='lightgray'
-    ).transform_filter(
-        (alt.datum['Month'] == 'Saturday') | (alt.datum['Month'] == 'Sunday')
-    ).transform_calculate(
-        y='1'
-    ).encode(
-        y=alt.Y("y:Q").axis(None)
+        text=alt.Text("name:N")
     )
+
+    legendCircle = legendBase.mark_circle().encode(
+        size=alt.value(120),
+        color=alt.Color("name:N", scale=alt.Scale(domain=legendData['name'], range=legendData['color'])).legend(None)
+    )
+
+    legend = legendText + legendCircle
 
     note_data = pd.DataFrame({
         "text": [[
-                "** Ride duration and count reflect typical usage patterns but do not capture trip distance or route.",
+                "** Ride count reflects typical usage patterns but do not capture trip distance.",
                 "Y-axis minimum adjusted for clarity." 
         ]]
     })
@@ -121,22 +109,25 @@ async def draw():
         text="text"
     )
 
-    wednesdayText = alt.layer(wednesdayText1)
+    mainChart = (countLine +
+     countLine2
+    ).encode(
+        x=alt.X("Month:N").title(None).sort(data["Month Sort"], order="ascending")
+    ).resolve_scale(
+        y="independent"
+    ).resolve_axis(
+        y="independent"
+    )
+
     countLine = (countLine)
     chart =  alt.vconcat(
-    (alt.layer(
-            countLine, 
-            durationLine
-        ).resolve_scale(
-            y="independent"
-        ) + weekend_band),
-    note
+        alt.vconcat(mainChart, legend, center=True, spacing=40), 
+        note
     )
 
     chart = chart.properties(
         title=alt.Title(
-            text="Seasonal Riding Patterns Show Strong Summer Peak and Winter Slowdown",
-            subtitle="Casual Riders Only"
+            text=["Seasonal Changes Affect Equally or", "Doesn't Affect Riders' Behavior Significantly."],
         ),
     )
     

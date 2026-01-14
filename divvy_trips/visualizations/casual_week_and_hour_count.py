@@ -23,9 +23,14 @@ OPTIONS = {
 alt.renderers.enable("browser")
 
 arrow_url = Path("visualizations/assets/arrow_left_down.png").resolve()
+curly_url = Path("visualizations/assets/open-bracket.png").resolve()
 
 async def draw():
-    # arrow_image_data = open_image(arrow_url, rotate=-40)
+    width = 130
+    height = 50
+    arrow_left_down_image = open_image(arrow_url, rotate=-40, opaque=150)
+    arrow_right_down_image = open_image(arrow_url, rotate=-50, flip="left", opaque=150)
+    curly_down_image = open_image(curly_url, rotate=-90, width=width, height=height)
     
     if (OPTIONS.get("useTestData")):
         BASE_DIR = Path(__file__).resolve().parent
@@ -37,7 +42,7 @@ async def draw():
     xTicks = np.array([[str(n) + " PM", str(n) + " AM"] for n in range(1, 12, 3)]).flatten()
     legendData = pd.DataFrame({
         "name": ["Weekends (Casual)", "Weekends (Member)", "Weekdays"],
-        "color": ["red", "yellow", "green"],
+        "color": [theme.themeColor[0], theme.themeColor[1], "gray"],
         "x": [0, 15, 30]
     })
 
@@ -46,7 +51,6 @@ async def draw():
     )
 
     legendBase = alt.Chart(legendData).encode( x=alt.X("x:Q").axis(None))
-
     
     casualCountBase = base.transform_filter(
         alt.datum['Rider Type'] == 'Casual'
@@ -55,7 +59,7 @@ async def draw():
            "Hour of Day:N",
            axis=alt.Axis(values=xTicks)
         ).title(None).sort(data["Hour of Day Sort"], order="ascending")
-    ).properties(width=400)
+    ).properties(width=500)
 
     casualCountLine = casualCountBase.mark_line().encode(
          y=alt.Y("Rides Count:Q").axis(title="Rides Count", format=".0s"),
@@ -71,7 +75,7 @@ async def draw():
            "Hour of Day:N",
            axis=alt.Axis(values=xTicks)
         ).title(None).sort(data["Hour of Day Sort"], order="ascending")
-    ).properties(width=400)
+    ).properties(width=500)
 
     memberCountLine = memberCountBase.mark_line().encode(
          y=alt.Y("Rides Count:Q").axis(title=None, format=".0s"),
@@ -93,95 +97,83 @@ async def draw():
         color=alt.Color("name:N", scale=alt.Scale(domain=legendData['name'], range=legendData['color'])).legend(None)
     )
 
-    # durationLine = base.mark_line(
-    #     color="#4c78a871",
-    #     strokeWidth=2,
-    #     strokeDash=[4, 4]
-    # ).encode(
-    #     y=alt.Y("Duration (min)").axis(title="Duration", labelExpr="datum.value + ' min'").scale(domain=[6, 15])
-    # )
+    # isCasual = data['Rider Type'] == 'Casual'
+    # isCasualWeekEnd = (isCasual) & ((data['Day of Week'] == 'Sunday') | (data['Day of Week'] == 'Saturday'))
+    # isMember = ~isCasual
+    # isMemberWeekEnd = (isMember) & ((data['Day of Week'] == 'Sunday') | (data['Day of Week'] == 'Saturday'))
 
-    # arrowImage = countLine.mark_image(
-    #     width=50,
-    #     height=50,
-    #     yOffset=-220,
-    #     xOffset=-20
-    # ).transform_filter(
-    #     alt.datum['Month'] == 'Saturday'
-    # ).transform_calculate(
-    #     url=f"'{arrow_image_data}'"
-    # ).encode(
-    #     url="url:N"
-    # )
+    # casualTotal = np.sum(base.data.loc[isCasual, 'Rides Count'])
+    # casualWeekendTotal = np.sum(base.data.loc[isCasualWeekEnd, 'Rides Count'])
+    # memberTotal = np.sum(base.data.loc[isMember, 'Rides Count'])
+    # memberWeekendTotal = np.sum(base.data.loc[isMemberWeekEnd, 'Rides Count'])
 
-    # wednesdayText1 = base.mark_text(
-    #     baseline='bottom',
-    #     fontSize=15,
-    #     fontWeight=400,
-    #     align="left",
-    #     lineHeight=20,
-    #     color="#325172",
-    #     dy=-180,
-    #     dx=-220
-    # ).transform_filter(
-    #     alt.datum['Month'] == 'Saturday'
-    # ).transform_calculate(
-    #     text="['Weekend rides are 40%', 'longer despite fewer trips.']"
-    # ).encode(
-    #     text="text:N"
-    # ) + arrowImage
+    # print(np.round(np.divide(casualWeekendTotal, casualTotal) * 100))
+    # print(np.round(np.divide(memberWeekendTotal, memberTotal) * 100))
 
-    # weekend_band = base.mark_rect(
-    #     opacity=0.2,
-    #     color='lightgray'
-    # ).transform_filter(
-    #     (alt.datum['Month'] == 'Saturday') | (alt.datum['Month'] == 'Sunday')
-    # ).transform_calculate(
-    #     y='1'
-    # ).encode(
-    #     y=alt.Y("y:Q").axis(None)
-    # )
+    curlyBracketImage = alt.Chart().mark_image(
+        width=width,
+        height=height,
+        xOffset=-200
+    ).transform_calculate(
+        url=f"'{curly_down_image}'"
+    ).encode(
+        url="url:N"
+    )
 
-    # note_data = pd.DataFrame({
-    #     "text": [[
-    #             "** Ride duration and count reflect typical usage patterns but do not capture trip distance or route.",
-    #             "Y-axis minimum adjusted for clarity." 
-    #     ]]
-    # })
+    arrowImage = alt.Chart().mark_image(
+        width=40,
+        height=40,
+        yOffset=90,
+        xOffset=-350
+    ).transform_calculate(
+        url=f"'{arrow_left_down_image}'"
+    ).encode(
+        url="url:N",
+    )
 
-    # note = alt.Chart(note_data).mark_text(
-    #     fontSize=10,
-    #     font="Inter",
-    #     color= "#808084",
-    #     fontStyle="italic",
-    #     lineHeight=16,
-    #     align="left"
-    # ).encode(
-    #     text="text"
-    # )
+    arrowImage2 = alt.Chart().mark_image(
+        width=40,
+        height=40,
+        yOffset=10,
+        xOffset=-130
+    ).transform_calculate(
+        url=f"'{arrow_right_down_image}'"
+    ).encode(
+        url="url:N",
+    )
 
-    # wednesdayText = alt.layer(wednesdayText1)
-    casualCountChart = (casualCountLine)
-    memberCountChart = (memberCountLine)
+    text1 = alt.Chart().mark_text(
+        dy=-70,
+        dx=-170
+    ).encode(
+        text=alt.value(["Morning Commute", "(7-9 AM)"])
+    )
+
+    text2 = alt.Chart().mark_text(
+        dy=-170,
+        dx=170
+    ).encode(
+        text=alt.value(["Evening Commute", "(4-6 PM)"])
+    )
+
+    text3 = alt.Chart().mark_text(
+        dy=-190,
+        dx=50
+    ).encode(
+        text=alt.value(["Leisure, tourism, recreation time", "(10 AM - 5 PM)"])
+    )
+
+    casualCountChart = (casualCountLine + text3 + curlyBracketImage)
+    memberCountChart = (memberCountLine + arrowImage + arrowImage2 + text1 + text2)
 
 
     countCharts = (casualCountChart | memberCountChart)
     legendChart = legendText + legendCircle
     chart = alt.vconcat(countCharts, legendChart, center=True, spacing=40)
-    # chart =  alt.vconcat(
-    # (alt.layer(
-    #         countLine, 
-    #         durationLine
-    #     ).resolve_scale(
-    #         y="independent"
-    #     ) + weekend_band),
-    # note
-    # )
 
     chart = chart.properties(
         title=alt.Title(
-            text="How ride goes during the day throughout the week",
-            subtitle="Casual Riders Only"
+            text=["Weekdays Are for Work; Weekends Are for Leisure—", "Casual Takes it Far."],
         ),
     )
     
