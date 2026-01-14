@@ -33,8 +33,8 @@ By examining trip duration, ride frequency, peak usage times, and common routes 
 
 ## Key Insights
 1. **Members Drive the Majority of Divvy Rides**
-<img src="./assets//member_casual_count.png"/>
-Members account for **64%** of total rides, compared to **36%** from casual riders, indicating more consistent and frequent usage driven by **strong retention** and **habitual riding**. However, trip counts alone do not reflect ride distance or duration, and further analysis is required to identify when and where Casual riders may exceed Members in usage.
+  <img src="./assets//member_casual_count.png"/>
+  Members account for **64%** of total rides, compared to **36%** from casual riders, indicating more consistent and frequent usage driven by **strong retention** and **habitual riding**. However, trip counts alone do not reflect ride distance or duration, and further analysis is required to identify when and where Casual riders may exceed Members in usage.
 
 2. **Casual and Member Riders Travel Similar Distances but at Different Durations.**
  Although both groups travel nearly identical distances—about **1.6 km** on average—Casual riders take significantly longer to complete their trips, with a duration of **12 minutes** compared to **8 minutes** for Members. This indicates that the key difference between the two groups is not how far they travel, but **how they travel**. 
