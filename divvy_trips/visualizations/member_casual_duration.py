@@ -104,6 +104,7 @@ async def draw():
         titleAnchor="start",
     )
     
-    chart.show()
+    # chart.show() # Show the chart with the default browser
+    chart.save("visualizations/jsons/member_casual_duration.json") # Create the json spec to be embeded in html.
 
 asyncio.run(draw())

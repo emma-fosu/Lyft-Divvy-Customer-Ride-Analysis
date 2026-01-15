@@ -36,27 +36,31 @@ By examining trip duration, ride frequency, peak usage times, and common routes 
   <img src="./assets//member_casual_count.png"/>
   Members account for **64%** of total rides, compared to **36%** from casual riders, indicating more consistent and frequent usage driven by **strong retention** and **habitual riding**. However, trip counts alone do not reflect ride distance or duration, and further analysis is required to identify when and where Casual riders may exceed Members in usage.
 
-2. **Casual and Member Riders Travel Similar Distances but at Different Durations.**
+2. **Casual and Member Riders Travel Similar Distances but at Different Durations.**   
  Although both groups travel nearly identical distances—about **1.6 km** on average—Casual riders take significantly longer to complete their trips, with a duration of **12 minutes** compared to **8 minutes** for Members. This indicates that the key difference between the two groups is not how far they travel, but **how they travel**. 
 <img src="./assets/member_casual_duration.png"/>
  Members appear to ride more efficiently and consistent with routine such as commuting, while Casual riders likely use the service for leisure, sightseeing, or unfamiliar navigation. These patterns highlight two distinct user behaviors within the system and suggest that further analysis of ride patterns by time of day, day of week, and station location will provide deeper insight.
 
  3. **Seasonality Affects Casual and Member Riders Similarly.**   
  <img src="./assets//member_casual_count_month.png" />
+
  Seasonality does not significantly differentiate rider behaviour between **Casual** and **Member** users. Instead, it acts as a **shared external driver influencing both groups** in the same way over time.
 This ensures that subsequent insights derived from **hour-level analysis** are robust across seasons and will not be distorted by **seasonal fluctuations** in total ridership.
 
 4. **Members Primary use the System for Commuting.**
 <img src="./assets/member_count_duration_weekkday.png" />
+
 Members show higher engagement on weekdays, peaking on **Wednesdays**, which aligns with Chicago’s busiest midweek travel days. Interestingly, member trip duration increases by **11%** on weekends, indicating that some members also use the service for leisure purposes in addition to routine commuting.
 
 5. **Casual Engages More in Weekends than in Weekdays**
 <img src="./assets//casual_count_duration_weekday.png" />
+
 Casual riders are primarily **weekend users**. Their engagement increased **51%** more in weekend than in weekday and they ride **4 min** longer. Weekend rides are **leisure-oriented trips**, while weekday trips are **limited** and **short**.   
 The conclusion that **all Casual** riders are leisure-oriented cannot be made immediately, as members also show longer trip durations on weekends. Further analysis is needed to determine what proportion of Casual riders are truly leisure-oriented versus members who use the service for commuting.
 
 6. **Weekdays are for Work and Weekend are for Leisure But Casual Takes it Far.**
 <img src="./assets/member_casual_hour_count.png" />
+
 Both rider types exhibit similar patterns, with commuting peaks between **7–9 AM** and **4–6 PM** on weekdays, and leisure peaks between **11 AM–4 PM** on weekends. However, Casual rider volume increases by **52%** on weekends, while Member volume decreases by **21%**. This suggests that some casual riders use the service for both commuting and leisure, making them prime targets for marketing campaigns aimed at converting them into Members.
 
 ## Conclusion

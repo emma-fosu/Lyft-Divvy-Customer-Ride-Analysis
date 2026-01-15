@@ -131,6 +131,7 @@ async def draw():
         ),
     )
     
-    chart.show()
+    # chart.show()
+    chart.save("visualizations/jsons/member_casual_by_month.json") # Create the json spec to be embeded in html.
 
 asyncio.run(draw())
