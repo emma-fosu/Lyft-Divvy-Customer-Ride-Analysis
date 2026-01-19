@@ -140,6 +140,8 @@ async def draw():
         ),
     )
     
-    chart.show()
+    # chart.show()
+    chart.save("visualizations/jsons/casual_count_weekday.json") # Create the json spec to be embeded in html.
+
 
 asyncio.run(draw())

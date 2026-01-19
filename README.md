@@ -84,7 +84,7 @@ Casual usage is concentrated around **tourist and recreational areas**, while Me
 The team can promote leisure and exploration messaging near parks and waterfronts and send commuter-focused Membership offers when Casual riders start trips near residential zones
 
 
-3. **Introduce Flexible Membership Options for Mixed-Use Riders**
+3. **Introduce Flexible Membership Options for Mixed-Use Riders.**   
 A significant portion of riders demonstrate both leisure and commuting behavior, especially across weekdays and weekends. A single annual plan may be too restrictive for this segment.   
 Therefore, the team can offer or promote **flexible plans** such as weekday-only passes, seasonal memberships, or bundled ride credits.
 
